@@ -32,6 +32,7 @@ import de.fraunhofer.aisec.cpg.graph.followPrevDFGEdgesUntilHit
 import de.fraunhofer.aisec.cpg.graph.statements.expressions.CallExpression
 import de.fraunhofer.aisec.cpg.graph.statements.expressions.MemberCallExpression
 import de.fraunhofer.aisec.cpg.graph.statements.expressions.MemberExpression
+import de.fraunhofer.aisec.cpg.graph.statements.expressions.Reference
 import de.fraunhofer.aisec.cpg.passes.ComponentPass
 import de.fraunhofer.aisec.cpg.passes.configuration.ExecuteLate
 
@@ -44,10 +45,10 @@ class DatabasePass(ctx: TranslationContext) : ComponentPass(ctx) {
     override fun accept(comp: Component) {
         comp.calls.filter { it.name.lastPartsMatch("SQLAlchemy") }.forEach { handleSQLAlchemy(it) }
 
-        comp.calls.filter { it.name.lastPartsMatch("add") }.forEach { handleAdd(it) }
+        comp.calls.filter { it.name.lastPartsMatch("add") }.forEach { handleAdd(it, comp.calls) }
     }
 
-    private fun handleAdd(addCall: CallExpression) {
+    private fun handleAdd(addCall: CallExpression, list: List<CallExpression>) {
         when (addCall) {
             is MemberCallExpression -> {
                 val base = addCall.base
@@ -78,6 +79,25 @@ class DatabasePass(ctx: TranslationContext) : ComponentPass(ctx) {
                                         .firstOrNull(), // TODO handle multiple arguments
                             )
                         }
+                    }
+
+                    is Reference -> {
+                        val db =
+                            list
+                                .flatMap { it.overlays.filterIsInstance<Database>() }
+                                .firstOrNull() // TODO nicht sicher dass er hier auch die richtige
+                        // findet functioniert solange den edge case mit 2
+                        // dbs nicht hat
+                        db?.let {
+                            newDatabaseAdd(
+                                addCall,
+                                it,
+                                what =
+                                    addCall.arguments
+                                        .firstOrNull(), // TODO handle multiple arguments
+                            )
+                        }
+                        val tmp = 1
                     }
                 }
             }

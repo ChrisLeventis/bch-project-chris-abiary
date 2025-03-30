@@ -1,0 +1,64 @@
+/*
+ * Copyright (c) 2025, Fraunhofer AISEC. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ *                    $$$$$$\  $$$$$$$\   $$$$$$\
+ *                   $$  __$$\ $$  __$$\ $$  __$$\
+ *                   $$ /  \__|$$ |  $$ |$$ /  \__|
+ *                   $$ |      $$$$$$$  |$$ |$$$$\
+ *                   $$ |      $$  ____/ $$ |\_$$ |
+ *                   $$ |  $$\ $$ |      $$ |  $$ |
+ *                   \$$$$$   |$$ |      \$$$$$   |
+ *                    \______/ \__|       \______/
+ *
+ */
+package de.fraunhofer.aisec.cpg.graph.concepts.networkcomm.httpTmp
+
+import de.fraunhofer.aisec.cpg.graph.*
+import de.fraunhofer.aisec.cpg.graph.MetadataProvider
+import de.fraunhofer.aisec.cpg.graph.statements.expressions.CallExpression
+
+fun MetadataProvider.newHttpClientNode(underlyingNode: Node): HttpClienttmp {
+    val node = HttpClienttmp(underlyingNode = underlyingNode)
+    node.codeAndLocationFrom(underlyingNode)
+    node.name = Name("HttpClient[" + underlyingNode.name.toString() + "]")
+    NodeBuilder.log(node)
+    return node
+}
+
+fun MetadataProvider.newHttpOpPostNode(
+    underlyingNode: Node,
+    client: HttpClienttmp,
+    what: Node?,
+): HttpOpPost {
+    val node = HttpOpPost(underlyingNode = underlyingNode, concept = client, what = what)
+    node.codeAndLocationFrom(underlyingNode)
+    node.name = Name("HttpOperation[" + underlyingNode.name.toString() + "]")
+    (underlyingNode as? CallExpression)?.let { it.arguments.forEach { arg -> arg.nextDFG += node } }
+    NodeBuilder.log(node)
+    return node
+}
+
+fun MetadataProvider.newHttpOpPutNode(
+    underlyingNode: Node,
+    client: HttpClienttmp,
+    what: Node?,
+): HttpOpPut {
+    val node = HttpOpPut(underlyingNode = underlyingNode, concept = client, what = what)
+    node.codeAndLocationFrom(underlyingNode)
+    node.name = Name("HttpOperation[" + underlyingNode.name.toString() + "]")
+    (underlyingNode as? CallExpression)?.let { it.arguments.forEach { arg -> arg.nextDFG += node } }
+    NodeBuilder.log(node)
+    return node
+}

@@ -29,6 +29,8 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import de.fraunhofer.aisec.cpg.*
 import de.fraunhofer.aisec.cpg.frontends.CompilationDatabase.Companion.fromFile
 import de.fraunhofer.aisec.cpg.graph.concepts.database.DatabasePass
+import de.fraunhofer.aisec.cpg.graph.concepts.logging.LoggingPass
+import de.fraunhofer.aisec.cpg.graph.concepts.networkcomm.httpTmp.HttpPass
 import de.fraunhofer.aisec.cpg.helpers.Benchmark
 import de.fraunhofer.aisec.cpg.passes.*
 import de.fraunhofer.aisec.cpg.persistence.persist
@@ -487,6 +489,8 @@ class Application : Callable<Int> {
             translationConfiguration.registerPass<ControlDependenceGraphPass>()
             translationConfiguration.registerPass<ProgramDependenceGraphPass>()
             translationConfiguration.registerPass<DatabasePass>()
+            translationConfiguration.registerPass<LoggingPass>()
+            translationConfiguration.registerPass<HttpPass>()
         }
         if (customPasses != "DEFAULT") {
             val pieces = customPasses.split(",")
