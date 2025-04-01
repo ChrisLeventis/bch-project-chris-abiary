@@ -82,22 +82,25 @@ class DatabasePass(ctx: TranslationContext) : ComponentPass(ctx) {
                     }
 
                     is Reference -> {
-                        val db =
-                            list
-                                .flatMap { it.overlays.filterIsInstance<Database>() }
-                                .firstOrNull() // TODO nicht sicher dass er hier auch die richtige
-                        // findet functioniert solange den edge case mit 2
-                        // dbs nicht hat
-                        db?.let {
-                            newDatabaseAdd(
-                                addCall,
-                                it,
-                                what =
-                                    addCall.arguments
-                                        .firstOrNull(), // TODO handle multiple arguments
-                            )
+                        if (base.name.toString().contains("session")) {
+                            val db =
+                                list
+                                    .flatMap { it.overlays.filterIsInstance<Database>() }
+                                    .firstOrNull() // TODO nicht sicher dass er hier auch die
+                            // richtige
+                            // findet functioniert solange den edge case mit 2
+                            // dbs nicht hat
+                            db?.let {
+                                newDatabaseAdd(
+                                    addCall,
+                                    it,
+                                    what =
+                                        addCall.arguments
+                                            .firstOrNull(), // TODO handle multiple arguments
+                                )
+                            }
+                            val tmp = 1
                         }
-                        val tmp = 1
                     }
                 }
             }

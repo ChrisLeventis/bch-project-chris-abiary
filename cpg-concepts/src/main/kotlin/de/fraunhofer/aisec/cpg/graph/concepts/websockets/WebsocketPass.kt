@@ -41,6 +41,7 @@ class WebsocketPass(ctx: TranslationContext) : ComponentPass(ctx) {
     override fun accept(comp: Component) {
 
         comp.calls.filter { it.name.lastPartsMatch("WebSocket") }.forEach { handleWSClient(it) }
+
         comp.calls
             .filter { it.name.lastPartsMatch("send") }
             .forEach { handleWSOperation(it, comp.calls) }

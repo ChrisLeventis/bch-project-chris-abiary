@@ -87,3 +87,18 @@ fun MetadataProvider.newRequestOpArgs(
     NodeBuilder.log(node)
     return node
 }
+
+fun MetadataProvider.newRequestOpJsonTwo(
+    underlyingNode: Node,
+    requestOb: RequestObjectNode,
+    what: Node?,
+): RequestOpJsonTwo {
+    val node = RequestOpJsonTwo(underlyingNode = underlyingNode, concept = requestOb, what = what)
+    node.codeAndLocationFrom(underlyingNode)
+    node.name = Name("RequestOpJsonKey[" + underlyingNode.name.toString() + "]")
+
+    (underlyingNode as? CallExpression)?.let { node.nextDFG = it.nextDFG }
+
+    NodeBuilder.log(node)
+    return node
+}

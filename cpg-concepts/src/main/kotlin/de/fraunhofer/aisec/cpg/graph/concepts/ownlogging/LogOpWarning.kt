@@ -23,9 +23,9 @@
  *                    \______/ \__|       \______/
  *
  */
-package de.fraunhofer.aisec.cpg.graph.concepts.logging
+package de.fraunhofer.aisec.cpg.graph.concepts.ownlogging
 
 import de.fraunhofer.aisec.cpg.graph.Node
 
-class LogOpInfo(underlyingNode: Node, concept: LoggerNode, val what: Node?) :
+class LogOpWarning(underlyingNode: Node, concept: LoggerNode, val what: Node?) :
     LogOp(underlyingNode = underlyingNode, concept = concept) {}

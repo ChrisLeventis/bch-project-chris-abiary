@@ -23,10 +23,9 @@
  *                    \______/ \__|       \______/
  *
  */
-package de.fraunhofer.aisec.cpg.graph.concepts.logging
+package de.fraunhofer.aisec.cpg.graph.concepts.flaskinput.request
 
 import de.fraunhofer.aisec.cpg.graph.Node
-import de.fraunhofer.aisec.cpg.graph.concepts.Operation
 
-abstract class LogOp(underlyingNode: Node, override val concept: LoggerNode) :
-    Operation(underlyingNode = underlyingNode, concept = concept)
+class RequestOpJsonTwo(underlyingNode: Node, concept: RequestObjectNode, what: Node?) :
+    RequestOp(underlyingNode = underlyingNode, concept = concept, what = what) {}

@@ -23,9 +23,6 @@
  *                    \______/ \__|       \______/
  *
  */
-package de.fraunhofer.aisec.cpg.graph.concepts.flaskinput.request
+package de.fraunhofer.aisec.cpg.graph.concepts.ownEncrypt
 
-import de.fraunhofer.aisec.cpg.graph.Node
-
-class RequestOpJson(underlyingNode: Node, concept: RequestObjectNode, what: Node?) :
-    RequestOp(underlyingNode = underlyingNode, concept = concept, what = what) {}
+class EncryptionBuilder {}

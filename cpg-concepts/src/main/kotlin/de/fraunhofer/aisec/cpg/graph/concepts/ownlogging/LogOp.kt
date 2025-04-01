@@ -23,9 +23,10 @@
  *                    \______/ \__|       \______/
  *
  */
-package de.fraunhofer.aisec.cpg.graph.concepts.logging
+package de.fraunhofer.aisec.cpg.graph.concepts.ownlogging
 
 import de.fraunhofer.aisec.cpg.graph.Node
+import de.fraunhofer.aisec.cpg.graph.concepts.Operation
 
-class LogOpDebug(underlyingNode: Node, concept: LoggerNode, val what: Node?) :
-    LogOp(underlyingNode = underlyingNode, concept = concept) {}
+abstract class LogOp(underlyingNode: Node, override val concept: LoggerNode) :
+    Operation(underlyingNode = underlyingNode, concept = concept)

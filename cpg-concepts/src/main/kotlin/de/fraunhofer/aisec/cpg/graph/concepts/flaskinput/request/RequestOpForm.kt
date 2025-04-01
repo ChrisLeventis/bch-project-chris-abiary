@@ -30,6 +30,6 @@ import de.fraunhofer.aisec.cpg.graph.Node
 class RequestOpForm(
     underlyingNode: Node,
     concept: RequestObjectNode,
-    val what: Node?,
+    what: Node?,
     val isResourceHandler: Boolean = false,
-) : RequestOp(underlyingNode = underlyingNode, concept = concept) {}
+) : RequestOp(underlyingNode = underlyingNode, concept = concept, what = what) {}

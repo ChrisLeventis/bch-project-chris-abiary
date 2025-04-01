@@ -27,5 +27,5 @@ package de.fraunhofer.aisec.cpg.graph.concepts.flaskinput.request
 
 import de.fraunhofer.aisec.cpg.graph.Node
 
-class RequestOpArgs(underlyingNode: Node, concept: RequestObjectNode, val what: Node?) :
-    RequestOp(underlyingNode = underlyingNode, concept = concept) {}
+class RequestOpArgs(underlyingNode: Node, concept: RequestObjectNode, what: Node?) :
+    RequestOp(underlyingNode = underlyingNode, concept = concept, what = what) {}

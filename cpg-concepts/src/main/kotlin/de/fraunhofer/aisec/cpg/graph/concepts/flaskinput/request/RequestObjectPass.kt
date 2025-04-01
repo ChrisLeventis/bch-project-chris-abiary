@@ -123,6 +123,32 @@ class RequestObjectPass(ctx: TranslationContext) : ComponentPass(ctx) {
                     requestOverlay?.let {
                         newRequestOpArgs(call, it, what = call.arguments.firstOrNull())
                     }
+                } else if (base is Reference && base.name.toString().contains("request.json")) {
+                    val requestOverlay =
+                        list
+                            .flatMap { it.overlays.filterIsInstance<RequestObjectNode>() }
+                            .firstOrNull()
+                    val dec =
+                        call.followPrevEOGEdgesUntilHit { node: Node ->
+                            node is FunctionDeclaration
+                        }
+                    val decReal = dec.fulfilled.first().last()
+
+                    requestOverlay?.let {
+                        newRequestOpJsonTwo(call, it, what = call.arguments.firstOrNull())
+                    }
+                } else if (
+                    base is MemberExpression &&
+                        base.name.toString().contains("json") &&
+                        base.base.name.toString().contains("request")
+                ) {
+                    val requestOverlay =
+                        list
+                            .flatMap { it.overlays.filterIsInstance<RequestObjectNode>() }
+                            .firstOrNull()
+                    requestOverlay?.let {
+                        newRequestOpJsonTwo(call, it, what = call.arguments.firstOrNull())
+                    }
                 }
             }
         }

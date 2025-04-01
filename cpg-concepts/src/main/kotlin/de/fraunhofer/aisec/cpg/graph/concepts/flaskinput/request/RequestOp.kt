@@ -28,5 +28,8 @@ package de.fraunhofer.aisec.cpg.graph.concepts.flaskinput.request
 import de.fraunhofer.aisec.cpg.graph.Node
 import de.fraunhofer.aisec.cpg.graph.concepts.Operation
 
-abstract class RequestOp(underlyingNode: Node, override val concept: RequestObjectNode) :
-    Operation(underlyingNode = underlyingNode, concept = concept)
+abstract class RequestOp(
+    underlyingNode: Node,
+    override val concept: RequestObjectNode,
+    val what: Node?,
+) : Operation(underlyingNode = underlyingNode, concept = concept)

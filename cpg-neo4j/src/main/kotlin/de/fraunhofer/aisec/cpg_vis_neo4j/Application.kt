@@ -29,7 +29,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import de.fraunhofer.aisec.cpg.*
 import de.fraunhofer.aisec.cpg.frontends.CompilationDatabase.Companion.fromFile
 import de.fraunhofer.aisec.cpg.graph.concepts.database.DatabasePass
-import de.fraunhofer.aisec.cpg.graph.concepts.logging.LoggingPass
+import de.fraunhofer.aisec.cpg.graph.concepts.ownlogging.LoggingPass
 import de.fraunhofer.aisec.cpg.graph.concepts.networkcomm.httpTmp.HttpPass
 import de.fraunhofer.aisec.cpg.helpers.Benchmark
 import de.fraunhofer.aisec.cpg.passes.*

@@ -35,14 +35,16 @@ import de.fraunhofer.aisec.cpg.graph.concepts.database.DatabasePass
 import de.fraunhofer.aisec.cpg.graph.concepts.flaskinput.ResourceObjectNode
 import de.fraunhofer.aisec.cpg.graph.concepts.flaskinput.ResourceObjectPass
 import de.fraunhofer.aisec.cpg.graph.concepts.flaskinput.request.*
-import de.fraunhofer.aisec.cpg.graph.concepts.logging.LogOp
-import de.fraunhofer.aisec.cpg.graph.concepts.logging.LoggingPass
 import de.fraunhofer.aisec.cpg.graph.concepts.networkcomm.httpTmp.HttpClienttmp
 import de.fraunhofer.aisec.cpg.graph.concepts.networkcomm.httpTmp.HttpOp
 import de.fraunhofer.aisec.cpg.graph.concepts.networkcomm.httpTmp.HttpPass
+import de.fraunhofer.aisec.cpg.graph.concepts.ownlogging.LogOp
+import de.fraunhofer.aisec.cpg.graph.concepts.ownlogging.LoggingPass
+import de.fraunhofer.aisec.cpg.graph.concepts.websockets.WebsocketOp
 import de.fraunhofer.aisec.cpg.graph.concepts.websockets.WebsocketPass
 import de.fraunhofer.aisec.cpg.graph.declarations.FunctionDeclaration
 import de.fraunhofer.aisec.cpg.graph.statements.expressions.CallExpression
+import de.fraunhofer.aisec.cpg.graph.statements.expressions.Literal
 import de.fraunhofer.aisec.cpg.test.analyze
 import java.io.File
 import kotlin.test.Test
@@ -458,6 +460,155 @@ class DatabaseTest {
             analyze(listOf(topLevel.resolve("websocket3.py")), topLevel.toPath(), true) {
                 it.registerLanguage<PythonLanguage>()
                 it.registerPass<WebsocketPass>()
+                it.registerPass<RequestObjectPass>()
+            }
+        val calls = result.calls.flatMap { it.overlays.filterIsInstance<RequestOp>() }
+        val matchingCalls =
+            calls.filter {
+                (it.what as? Literal<*>)?.value.toString() == "secret" ||
+                    (it.what as? Literal<*>)?.value.toString() == "lastname"
+            }
+
+        val paths =
+            matchingCalls.flatMap {
+                it.followNextDFGEdgesUntilHit { node -> node is WebsocketOp }.fulfilled
+            }
+
+        val list = 3
+        val tmp = 1
+    }
+
+    @Test
+    fun testNotSendt() {
+        val topLevel = File("src/integrationTest/resources/python")
+        val result =
+            analyze(listOf(topLevel.resolve("wholeTest.py")), topLevel.toPath(), true) {
+                it.registerLanguage<PythonLanguage>()
+                it.registerPass<WebsocketPass>()
+                it.registerPass<HttpPass>()
+                it.registerPass<RequestObjectPass>()
+            }
+        val calls = result.calls.flatMap { it.overlays.filterIsInstance<RequestOp>() }
+        val matchingCalls = calls.filter { (it.what as? Literal<*>)?.value.toString() == "secret" }
+
+        val paths =
+            calls.flatMap {
+                it.followNextDFGEdgesUntilHit { node -> node is DatabaseOperation }.fulfilled
+            }
+        val list = 3
+        val tmp = 1
+    }
+
+    @Test
+    fun testNotDatabse() {
+        val topLevel = File("src/integrationTest/resources/python")
+        val result =
+            analyze(listOf(topLevel.resolve("wholeTest.py")), topLevel.toPath(), true) {
+                it.registerLanguage<PythonLanguage>()
+                it.registerPass<DatabasePass>()
+            }
+        val calls = result.calls.flatMap { it.overlays.filterIsInstance<RequestOp>() }
+        val matchingCalls = calls.filter { (it.what as? Literal<*>)?.value.toString() == "secret" }
+
+        val paths =
+            calls.flatMap {
+                it.followNextDFGEdgesUntilHit { node -> node is DatabaseOperation }.fulfilled
+            }
+        val list = 3
+        val tmp = 1
+    }
+
+    // Sending with encrypt sanitization
+    @Test
+    fun testNoSendWithEncrypt() {
+        val topLevel = File("src/integrationTest/resources/python")
+        val result =
+            analyze(listOf(topLevel.resolve("encryptTest.py")), topLevel.toPath(), true) {
+                it.registerLanguage<PythonLanguage>()
+                it.registerPass<HttpPass>()
+                it.registerPass<WebsocketPass>()
+                it.registerPass<RequestObjectPass>()
+            }
+        val calls = result.calls.flatMap { it.overlays.filterIsInstance<RequestOp>() }
+        val matchingCalls =
+            calls.filter {
+                (it.what as? Literal<*>)?.value.toString() == "secret" ||
+                    (it.what as? Literal<*>)?.value.toString() == "lastname" ||
+                    (it.what as? Literal<*>)?.value.toString() == "temperature"
+            }
+
+        val paths =
+            matchingCalls.flatMap {
+                it.followNextDFGEdgesUntilHit { node -> node is HttpOp || node is WebsocketOp }
+                    .fulfilled
+            }
+        val violations =
+            paths.filter { list ->
+                list.none { entry ->
+                    entry is CallExpression && entry.name.toString().contains("encrypt")
+                }
+            }
+
+        val list = 3
+        val tmp = 1
+    }
+
+    @Test
+    fun testNoLoggingWithEncrypt() {
+        val topLevel = File("src/integrationTest/resources/python")
+        val result =
+            analyze(listOf(topLevel.resolve("encryptTest2.py")), topLevel.toPath(), true) {
+                it.registerLanguage<PythonLanguage>()
+                it.registerPass<LoggingPass>()
+                it.registerPass<RequestObjectPass>()
+            }
+        val calls = result.calls.flatMap { it.overlays.filterIsInstance<RequestOp>() }
+        val matchingCalls =
+            calls.filter {
+                (it.what as? Literal<*>)?.value.toString() == "secret" ||
+                    (it.what as? Literal<*>)?.value.toString() == "temperature"
+            }
+
+        val paths =
+            matchingCalls.flatMap {
+                it.followNextDFGEdgesUntilHit { node -> node is LogOp }.fulfilled
+            }
+        val violations =
+            paths.filter { list ->
+                list.none { entry ->
+                    entry is CallExpression && entry.name.toString().contains("encrypt")
+                }
+            }
+
+        val list = 3
+        val tmp = 1
+    }
+
+    @Test
+    fun testNoSavingWithEncrypt() {
+        val topLevel = File("src/integrationTest/resources/python")
+        val result =
+            analyze(listOf(topLevel.resolve("encryptedTest3.py")), topLevel.toPath(), true) {
+                it.registerLanguage<PythonLanguage>()
+                it.registerPass<DatabasePass>()
+                it.registerPass<RequestObjectPass>()
+            }
+        val calls = result.calls.flatMap { it.overlays.filterIsInstance<RequestOp>() }
+        val matchingCalls =
+            calls.filter {
+                (it.what as? Literal<*>)?.value.toString() == "secret" ||
+                    (it.what as? Literal<*>)?.value.toString() == "temperature"
+            }
+
+        val paths =
+            matchingCalls.flatMap {
+                it.followNextDFGEdgesUntilHit { node -> node is DatabaseOperation }.fulfilled
+            }
+        val violations =
+            paths.filter { list ->
+                list.none { entry ->
+                    entry is CallExpression && entry.name.toString().contains("encrypt")
+                }
             }
 
         val list = 3

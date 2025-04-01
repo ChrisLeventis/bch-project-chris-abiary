@@ -23,9 +23,6 @@
  *                    \______/ \__|       \______/
  *
  */
-package de.fraunhofer.aisec.cpg.graph.concepts.logging
+package de.fraunhofer.aisec.cpg.graph.concepts.ownEncrypt
 
-import de.fraunhofer.aisec.cpg.graph.Node
-import de.fraunhofer.aisec.cpg.graph.concepts.Concept
-
-class LoggerNode(underlyingNode: Node) : Concept<LogOp>(underlyingNode = underlyingNode)
+class OwnEncryptionPass {}

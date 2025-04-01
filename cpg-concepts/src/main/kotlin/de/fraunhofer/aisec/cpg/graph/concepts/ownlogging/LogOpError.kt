@@ -23,9 +23,9 @@
  *                    \______/ \__|       \______/
  *
  */
-package de.fraunhofer.aisec.cpg.graph.concepts.flaskinput.request
+package de.fraunhofer.aisec.cpg.graph.concepts.ownlogging
 
 import de.fraunhofer.aisec.cpg.graph.Node
 
-class RequestOpJson(underlyingNode: Node, concept: RequestObjectNode, what: Node?) :
-    RequestOp(underlyingNode = underlyingNode, concept = concept, what = what) {}
+class LogOpError(underlyingNode: Node, concept: LoggerNode, val what: Node?) :
+    LogOp(underlyingNode = underlyingNode, concept = concept) {}
