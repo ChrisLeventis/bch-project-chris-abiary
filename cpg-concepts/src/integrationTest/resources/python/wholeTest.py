@@ -36,9 +36,12 @@ def submit_secret():
     randomoperation = ''.join(random.choices(string.ascii_letters + string.digits, k=5))
     secret = f"{secret}-{randomoperation}"
 
+    with open("log.txt", "w") as f:
+        f.write(secret)
+
 
     new_entry = Secret(content=secret)
-    db.session.add(new_entry)
+    db.session.add(52)
     db.session.commit()
 
 

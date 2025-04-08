@@ -28,9 +28,7 @@ def receive():
     secret = request.json.get("secret")
 
     temperature = request.json.get("temperature")
-
     nonsensitive = request.json.get("nonSensitive")
-
 
     encryptedTemperature = encrypt(temperature)
 

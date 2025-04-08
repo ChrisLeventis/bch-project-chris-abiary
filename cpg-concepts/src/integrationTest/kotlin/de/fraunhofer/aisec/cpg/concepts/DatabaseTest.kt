@@ -32,6 +32,7 @@ import de.fraunhofer.aisec.cpg.graph.concepts.database.Database
 import de.fraunhofer.aisec.cpg.graph.concepts.database.DatabaseOpAdd
 import de.fraunhofer.aisec.cpg.graph.concepts.database.DatabaseOperation
 import de.fraunhofer.aisec.cpg.graph.concepts.database.DatabasePass
+import de.fraunhofer.aisec.cpg.graph.concepts.fileown.FilePass
 import de.fraunhofer.aisec.cpg.graph.concepts.flaskinput.ResourceObjectNode
 import de.fraunhofer.aisec.cpg.graph.concepts.flaskinput.ResourceObjectPass
 import de.fraunhofer.aisec.cpg.graph.concepts.flaskinput.request.*
@@ -57,7 +58,7 @@ class DatabaseTest {
     fun testDBSimple() {
         val topLevel = File("src/integrationTest/resources/python")
         val result =
-            analyze(listOf(topLevel.resolve("sqlalchemy.py")), topLevel.toPath(), true) {
+            analyze(listOf(topLevel.resolve("wholeTest.py")), topLevel.toPath(), true) {
                 it.registerLanguage<PythonLanguage>()
                 it.registerPass<DatabasePass>()
             }
@@ -533,7 +534,6 @@ class DatabaseTest {
         val matchingCalls =
             calls.filter {
                 (it.what as? Literal<*>)?.value.toString() == "secret" ||
-                    (it.what as? Literal<*>)?.value.toString() == "lastname" ||
                     (it.what as? Literal<*>)?.value.toString() == "temperature"
             }
 
@@ -609,6 +609,96 @@ class DatabaseTest {
                 list.none { entry ->
                     entry is CallExpression && entry.name.toString().contains("encrypt")
                 }
+            }
+
+        val list = 3
+        val tmp = 1
+    }
+
+    @Test
+    fun testNoSavingEvaluation() {
+        val topLevel = File("src/integrationTest/resources/evaluation/textEv")
+        val result =
+            analyze(
+                listOf(
+                    topLevel.resolve("something.py"),
+                    topLevel.resolve("models.py"),
+                    topLevel.resolve("routes.py"),
+                ),
+                topLevel.toPath(),
+                true,
+            ) {
+                it.registerLanguage<PythonLanguage>()
+                it.registerPass<DatabasePass>()
+                it.registerPass<RequestObjectPass>()
+            }
+        val calls = result.calls.flatMap { it.overlays.filterIsInstance<RequestOp>() }
+
+        val paths =
+            calls.flatMap {
+                it.followNextDFGEdgesUntilHit { node -> node is DatabaseOperation }.fulfilled
+            }
+        val violations =
+            paths.filter { list ->
+                list.none { entry ->
+                    entry is CallExpression && entry.name.toString().contains("encrypt")
+                }
+            }
+
+        val list = 3
+        val tmp = 1
+    }
+
+    @Test
+    fun testNoSavingEvaluation2() {
+        val topLevel = File("src/integrationTest/resources/evaluation/testEv2")
+        val result =
+            analyze(
+                listOf(topLevel.resolve("app.py"), topLevel.resolve("gpt.py")),
+                topLevel.toPath(),
+                true,
+            ) {
+                it.registerLanguage<PythonLanguage>()
+                it.registerPass<DatabasePass>()
+                it.registerPass<RequestObjectPass>()
+            }
+        val calls = result.calls.flatMap { it.overlays.filterIsInstance<RequestOp>() }
+
+        val paths =
+            calls.flatMap {
+                it.followNextDFGEdgesUntilHit { node -> node is DatabaseOperation }.fulfilled
+            }
+        val violations =
+            paths.filter { list ->
+                list.none { entry ->
+                    entry is CallExpression && entry.name.toString().contains("encrypt")
+                }
+            }
+
+        val list = 3
+        val tmp = 1
+    }
+
+    @Test
+    fun testFile() {
+        val topLevel = File("src/integrationTest/resources/python")
+        val result =
+            analyze(listOf(topLevel.resolve("wholeTest.py")), topLevel.toPath(), true) {
+                it.registerLanguage<PythonLanguage>()
+                it.registerPass<FilePass>()
+            }
+
+        val list = 3
+        val tmp = 1
+    }
+
+    @Test
+    fun testDbError() {
+        val topLevel = File("src/integrationTest/resources/python")
+        val result =
+            analyze(listOf(topLevel.resolve("sqlalchemyerror.py")), topLevel.toPath(), true) {
+                it.registerLanguage<PythonLanguage>()
+                it.registerPass<DatabasePass>()
             }
 
         val list = 3

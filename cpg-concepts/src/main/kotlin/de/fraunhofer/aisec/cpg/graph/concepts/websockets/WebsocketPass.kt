@@ -28,6 +28,7 @@ package de.fraunhofer.aisec.cpg.graph.concepts.websockets
 import de.fraunhofer.aisec.cpg.TranslationContext
 import de.fraunhofer.aisec.cpg.graph.Component
 import de.fraunhofer.aisec.cpg.graph.calls
+import de.fraunhofer.aisec.cpg.graph.followPrevDFGEdgesUntilHit
 import de.fraunhofer.aisec.cpg.graph.statements.expressions.CallExpression
 import de.fraunhofer.aisec.cpg.graph.statements.expressions.MemberCallExpression
 import de.fraunhofer.aisec.cpg.graph.statements.expressions.Reference
@@ -57,7 +58,6 @@ class WebsocketPass(ctx: TranslationContext) : ComponentPass(ctx) {
             is MemberCallExpression -> {
                 val base = call.base
                 when (base) {
-                    /*
                     is Reference -> {
                         val ws =
                             base
@@ -70,32 +70,30 @@ class WebsocketPass(ctx: TranslationContext) : ComponentPass(ctx) {
                                 ?.overlays
                                 ?.filterIsInstance<WebsocketClient>()
                                 ?.singleOrNull()
+
+                        if (ws == null) {
+                            val ws =
+                                list
+                                    .flatMap { it.overlays.filterIsInstance<WebsocketClient>() }
+                                    .firstOrNull()
+                            if (
+                                base.name
+                                    .toString()
+                                    .contains(ws?.underlyingNode?.nextDFG?.first()?.name.toString())
+                            ) {
+                                ws?.let {
+                                    newWebsocketOpSendNode(
+                                        call,
+                                        it,
+                                        what = call.arguments.firstOrNull(),
+                                    )
+                                }
+                            }
+                        }
+
                         ws?.let {
                             newWebsocketOpSendNode(call, it, what = call.arguments.firstOrNull())
                         }
-                    }
-
-                     */
-
-                    is Reference -> {
-                        val ws =
-                            list
-                                .flatMap { it.overlays.filterIsInstance<WebsocketClient>() }
-                                .firstOrNull()
-                        if (
-                            base.name
-                                .toString()
-                                .contains(ws?.underlyingNode?.nextDFG?.first()?.name.toString())
-                        ) {
-                            ws?.let {
-                                newWebsocketOpSendNode(
-                                    call,
-                                    it,
-                                    what = call.arguments.firstOrNull(),
-                                )
-                            }
-                        }
-                        val tmp = 1
                     }
                 }
             }

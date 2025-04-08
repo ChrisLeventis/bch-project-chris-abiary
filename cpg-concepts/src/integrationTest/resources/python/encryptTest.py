@@ -3,7 +3,7 @@ import requests
 
 app = Flask(__name__)
 
-FAKE_ENDPOINT = "https://httpbin.org/post"
+FAKE_ENDPOINT = "https://example.com/post"
 
 WS_SERVER_URL = "wss://example.com/socket"
 
@@ -19,34 +19,21 @@ def send_data(data):
 def receive_data():
 
     secret = request.json.get("secret")
-
-    lastname = request.json.get("lastname")
-
-    username = request.json.get("username")
-
     temperature = request.json.get("temperature")
-
-    if not secret:
-        return jsonify({"error": "No secret provided"}), 400
-
-    encryptedLastname = encrypt(lastname)
+    nonSensitive = request.json.get("nonsensitive")
 
     encryptedTemperature = encrypt(temperature)
 
+    response = requests.post(FAKE_ENDPOINT, json={"forwarded_data": secret})
+    response = requests.post(FAKE_ENDPOINT, json={"forwarded_data": encryptedTemperature})
+    response = requests.post(FAKE_ENDPOINT, json={"forwarded_data": nonSensitive})
 
-    response = requests.post(FAKE_ENDPOINT, json={"forwarded_secret": secret})
-
-    response = requests.post(FAKE_ENDPOINT, json={"forwarded_secret": encryptedLastname})
-
-    response = requests.post(FAKE_ENDPOINT, json={"forwarded_secret": username})
-
-    send_data(temperature)
-
+    send_data(secret)
     send_data(encryptedTemperature)
+    send_data(nonSensitive)
 
+    return "Data sent successfully", 200
 
-
-    return jsonify({"status": "Sent", "response": response.json()}), response.status_code
 
 if __name__ == "__main__":
     app.run(debug=True)

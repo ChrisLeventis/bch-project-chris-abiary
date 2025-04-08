@@ -52,32 +52,22 @@ class DatabasePass(ctx: TranslationContext) : ComponentPass(ctx) {
         when (addCall) {
             is MemberCallExpression -> {
                 val base = addCall.base
-                // TODO localName == session
                 when (base) {
                     is MemberExpression -> {
                         val baseBase = base.base
                         val db =
                             baseBase
-                                .followPrevDFGEdgesUntilHit { // walk DFg backwards until you find a
-                                    // node that has on overlay of type
-                                    // [Database]
+                                .followPrevDFGEdgesUntilHit {
                                     it.overlays.filterIsInstance<Database>().isNotEmpty()
                                 }
-                                .fulfilled // we are only interested in successful DFG paths
-                                .singleOrNull() // TODO: handle multiple paths
-                                ?.last() // the last node in the path -> the node connected to the
-                                // [Database] node
+                                .fulfilled
+                                .singleOrNull()
+                                ?.last()
                                 ?.overlays // it's overlay nodes
                                 ?.filterIsInstance<Database>()
-                                ?.singleOrNull() // TODO: handle multiple overlays
+                                ?.singleOrNull()
                         db?.let {
-                            newDatabaseAdd(
-                                addCall,
-                                it,
-                                what =
-                                    addCall.arguments
-                                        .firstOrNull(), // TODO handle multiple arguments
-                            )
+                            newDatabaseAdd(addCall, it, what = addCall.arguments.firstOrNull())
                         }
                     }
 
@@ -86,18 +76,12 @@ class DatabasePass(ctx: TranslationContext) : ComponentPass(ctx) {
                             val db =
                                 list
                                     .flatMap { it.overlays.filterIsInstance<Database>() }
-                                    .firstOrNull() // TODO nicht sicher dass er hier auch die
+                                    .firstOrNull()
                             // richtige
                             // findet functioniert solange den edge case mit 2
                             // dbs nicht hat
                             db?.let {
-                                newDatabaseAdd(
-                                    addCall,
-                                    it,
-                                    what =
-                                        addCall.arguments
-                                            .firstOrNull(), // TODO handle multiple arguments
-                                )
+                                newDatabaseAdd(addCall, it, what = addCall.arguments.firstOrNull())
                             }
                             val tmp = 1
                         }
