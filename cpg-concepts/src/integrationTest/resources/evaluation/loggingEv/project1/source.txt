@@ -1,0 +1,3 @@
+https://github.com/LargeCupPanda/StockAnal_Sys/tree/b29660ba1693970fd393e4e575953373fbf4660c
+
+findet nicht wegen anderem access pattern
