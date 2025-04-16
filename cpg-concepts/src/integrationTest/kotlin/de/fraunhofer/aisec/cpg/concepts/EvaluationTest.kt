@@ -27,11 +27,9 @@ package de.fraunhofer.aisec.cpg.concepts
 
 import de.fraunhofer.aisec.cpg.frontends.python.PythonLanguage
 import de.fraunhofer.aisec.cpg.graph.*
-import de.fraunhofer.aisec.cpg.graph.concepts.flaskinput.ResourceObjectPass
+import de.fraunhofer.aisec.cpg.graph.concepts.SendingOperation
 import de.fraunhofer.aisec.cpg.graph.concepts.flaskinput.request.*
-import de.fraunhofer.aisec.cpg.graph.concepts.networkcomm.httpTmp.HttpOp
 import de.fraunhofer.aisec.cpg.graph.concepts.networkcomm.httpTmp.HttpPass
-import de.fraunhofer.aisec.cpg.graph.concepts.websockets.WebsocketOp
 import de.fraunhofer.aisec.cpg.graph.concepts.websockets.WebsocketPass
 import de.fraunhofer.aisec.cpg.graph.statements.expressions.CallExpression
 import de.fraunhofer.aisec.cpg.test.analyze
@@ -41,11 +39,11 @@ import kotlin.test.Test
 class EvaluationTest {
     @Test
     fun sending1() {
-        val topLevel = File("src/integrationTest/resources/evaluation/sendingEv/project1")
+        val topLevel = File("src/integrationTest/resources/evaluation/sendingEv/project4")
         val result =
-            analyze(listOf(topLevel.resolve("views.py")), topLevel.toPath(), true) {
+            analyze(listOf(topLevel.resolve("websockets.py")), topLevel.toPath(), true) {
                 it.registerLanguage<PythonLanguage>()
-                it.registerPass<ResourceObjectPass>()
+                it.registerPass<RequestObjectPass>()
                 it.registerPass<WebsocketPass>()
                 it.registerPass<HttpPass>()
             }
@@ -54,8 +52,7 @@ class EvaluationTest {
 
         val paths =
             calls.flatMap {
-                it.followNextDFGEdgesUntilHit { node -> node is HttpOp || node is WebsocketOp }
-                    .fulfilled
+                it.followNextDFGEdgesUntilHit { node -> node is SendingOperation }.fulfilled
             }
         val violations =
             paths.filter { list ->
@@ -70,67 +67,6 @@ class EvaluationTest {
 
     @Test
     fun sending2() {
-        // finding violations
-        val topLevel = File("src/integrationTest/resources/evaluation/sendingEv/project2")
-        val result =
-            analyze(listOf(topLevel.resolve("webserver.py")), topLevel.toPath(), true) {
-                it.registerLanguage<PythonLanguage>()
-                it.registerPass<RequestObjectPass>()
-                it.registerPass<WebsocketPass>()
-                it.registerPass<HttpPass>()
-            }
-
-        val calls = result.calls.flatMap { it.overlays.filterIsInstance<RequestOp>() }
-
-        val paths =
-            calls.flatMap {
-                it.followNextDFGEdgesUntilHit { node -> node is HttpOp || node is WebsocketOp }
-                    .fulfilled
-            }
-        val violations =
-            paths.filter { list ->
-                list.none { entry ->
-                    entry is CallExpression && entry.name.toString().contains("encrypt")
-                }
-            }
-
-        val list = 3
-        val tmp = 1
-    }
-
-    @Test
-    fun sending3() {
-        // finding violations
-        val topLevel = File("src/integrationTest/resources/evaluation/sendingEv/project3")
-        val result =
-            analyze(listOf(topLevel.resolve("server.py")), topLevel.toPath(), true) {
-                it.registerLanguage<PythonLanguage>()
-                it.registerPass<RequestObjectPass>()
-                it.registerPass<WebsocketPass>()
-                it.registerPass<HttpPass>()
-            }
-
-        val calls = result.calls.flatMap { it.overlays.filterIsInstance<RequestOp>() }
-
-        val paths =
-            calls.flatMap {
-                it.followNextDFGEdgesUntilHit { node -> node is HttpOp || node is WebsocketOp }
-                    .fulfilled
-            }
-        val violations =
-            paths.filter { list ->
-                list.none { entry ->
-                    entry is CallExpression && entry.name.toString().contains("encrypt")
-                }
-            }
-
-        val list = 3
-        val tmp = 1
-    }
-
-    @Test
-    fun sending4() {
-        // finding violations
         val topLevel = File("src/integrationTest/resources/evaluation/sendingEv/project4")
         val result =
             analyze(listOf(topLevel.resolve("websockets.py")), topLevel.toPath(), true) {
@@ -144,38 +80,7 @@ class EvaluationTest {
 
         val paths =
             calls.flatMap {
-                it.followNextDFGEdgesUntilHit { node -> node is HttpOp || node is WebsocketOp }
-                    .fulfilled
-            }
-        val violations =
-            paths.filter { list ->
-                list.none { entry ->
-                    entry is CallExpression && entry.name.toString().contains("encrypt")
-                }
-            }
-
-        val list = 3
-        val tmp = 1
-    }
-
-    @Test
-    fun sending5() {
-        //doesnt find violations because different access pattern --> request.json without get
-        val topLevel = File("src/integrationTest/resources/evaluation/sendingEv/project5")
-        val result =
-            analyze(listOf(topLevel.resolve("DS.py")), topLevel.toPath(), true) {
-                it.registerLanguage<PythonLanguage>()
-                it.registerPass<RequestObjectPass>()
-                it.registerPass<WebsocketPass>()
-                it.registerPass<HttpPass>()
-            }
-
-        val calls = result.calls.flatMap { it.overlays.filterIsInstance<RequestOp>() }
-
-        val paths =
-            calls.flatMap {
-                it.followNextDFGEdgesUntilHit { node -> node is HttpOp || node is WebsocketOp }
-                    .fulfilled
+                it.followNextDFGEdgesUntilHit { node -> node is SendingOperation }.fulfilled
             }
         val violations =
             paths.filter { list ->

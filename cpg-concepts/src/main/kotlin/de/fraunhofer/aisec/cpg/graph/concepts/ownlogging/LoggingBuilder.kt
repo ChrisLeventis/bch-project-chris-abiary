@@ -46,7 +46,7 @@ fun MetadataProvider.newLogOpError(
     val node = LogOpError(underlyingNode = underlyingNode, concept = logger, what = what)
     node.codeAndLocationFrom(underlyingNode)
 
-    node.name = Name("LoggingError[" + underlyingNode.name.toString() + "]")
+    node.name = Name("LogOperation[" + underlyingNode.name.toString() + "]")
 
     (underlyingNode as? CallExpression)?.let { it.arguments.forEach { arg -> arg.nextDFG += node } }
 
@@ -62,7 +62,7 @@ fun MetadataProvider.newLogOpInfo(
     val node = LogOpInfo(underlyingNode = underlyingNode, concept = logger, what = what)
     node.codeAndLocationFrom(underlyingNode)
 
-    node.name = Name("LoggingInfo[" + underlyingNode.name.toString() + "]")
+    node.name = Name("LogOperation[" + underlyingNode.name.toString() + "]")
 
     (underlyingNode as? CallExpression)?.let { it.arguments.forEach { arg -> arg.nextDFG += node } }
 
@@ -78,7 +78,7 @@ fun MetadataProvider.newLogOpDebug(
     val node = LogOpDebug(underlyingNode = underlyingNode, concept = logger, what = what)
     node.codeAndLocationFrom(underlyingNode)
 
-    node.name = Name("LoggingDebug[" + underlyingNode.name.toString() + "]")
+    node.name = Name("LogOperation[" + underlyingNode.name.toString() + "]")
 
     (underlyingNode as? CallExpression)?.let { it.arguments.forEach { arg -> arg.nextDFG += node } }
 
@@ -94,7 +94,7 @@ fun MetadataProvider.newLogOpCritical(
     val node = LogOpCritical(underlyingNode = underlyingNode, concept = logger, what = what)
     node.codeAndLocationFrom(underlyingNode)
 
-    node.name = Name("LoggingCritical[" + underlyingNode.name.toString() + "]")
+    node.name = Name("LogOperation[" + underlyingNode.name.toString() + "]")
 
     (underlyingNode as? CallExpression)?.let { it.arguments.forEach { arg -> arg.nextDFG += node } }
 
@@ -110,7 +110,7 @@ fun MetadataProvider.newLogOpWarning(
     val node = LogOpWarning(underlyingNode = underlyingNode, concept = logger, what = what)
     node.codeAndLocationFrom(underlyingNode)
 
-    node.name = Name("LoggingWarning[" + underlyingNode.name.toString() + "]")
+    node.name = Name("LogOperation[" + underlyingNode.name.toString() + "]")
 
     (underlyingNode as? CallExpression)?.let { it.arguments.forEach { arg -> arg.nextDFG += node } }
 

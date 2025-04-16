@@ -62,3 +62,16 @@ fun MetadataProvider.newHttpOpPutNode(
     NodeBuilder.log(node)
     return node
 }
+
+fun MetadataProvider.newHttpOpGetNode(
+    underlyingNode: Node,
+    client: HttpClienttmp,
+    what: Node?,
+): HttpOpGet {
+    val node = HttpOpGet(underlyingNode = underlyingNode, concept = client, what = what)
+    node.codeAndLocationFrom(underlyingNode)
+    node.name = Name("HttpOperation[" + underlyingNode.name.toString() + "]")
+    (underlyingNode as? CallExpression)?.let { it.arguments.forEach { arg -> arg.nextDFG += node } }
+    NodeBuilder.log(node)
+    return node
+}

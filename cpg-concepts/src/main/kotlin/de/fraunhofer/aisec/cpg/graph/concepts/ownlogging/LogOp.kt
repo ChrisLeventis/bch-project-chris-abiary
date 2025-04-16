@@ -26,7 +26,7 @@
 package de.fraunhofer.aisec.cpg.graph.concepts.ownlogging
 
 import de.fraunhofer.aisec.cpg.graph.Node
-import de.fraunhofer.aisec.cpg.graph.concepts.Operation
+import de.fraunhofer.aisec.cpg.graph.concepts.LoggingOperation
 
 abstract class LogOp(underlyingNode: Node, override val concept: LoggerNode) :
-    Operation(underlyingNode = underlyingNode, concept = concept)
+    LoggingOperation(underlyingNode = underlyingNode, concept = concept)

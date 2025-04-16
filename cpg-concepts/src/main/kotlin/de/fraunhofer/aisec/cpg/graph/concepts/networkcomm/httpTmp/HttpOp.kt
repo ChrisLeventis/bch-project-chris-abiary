@@ -26,7 +26,7 @@
 package de.fraunhofer.aisec.cpg.graph.concepts.networkcomm.httpTmp
 
 import de.fraunhofer.aisec.cpg.graph.Node
-import de.fraunhofer.aisec.cpg.graph.concepts.Operation
+import de.fraunhofer.aisec.cpg.graph.concepts.SendingOperation
 
 abstract class HttpOp(underlyingNode: Node, override val concept: HttpClienttmp) :
-    Operation(underlyingNode = underlyingNode, concept = concept)
+    SendingOperation(underlyingNode = underlyingNode, concept = concept)

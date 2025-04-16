@@ -52,6 +52,10 @@ class HttpPass(ctx: TranslationContext) : ComponentPass(ctx) {
         comp.calls
             .filter { it.name.lastPartsMatch("put") }
             .forEach { handleHttpPutOp(it, comp.imports) }
+
+        comp.calls
+            .filter { it.name.lastPartsMatch("get") }
+            .forEach { handleHttpGetOp(it, comp.imports) }
     }
 
     private fun handleHttpClient(import: ImportDeclaration) {
@@ -118,6 +122,38 @@ class HttpPass(ctx: TranslationContext) : ComponentPass(ctx) {
 
             httpClientOverlay?.let {
                 newHttpOpPutNode(call, it, what = call.arguments.firstOrNull())
+            }
+        }
+    }
+
+    private fun handleHttpGetOp(call: CallExpression, list: List<ImportDeclaration>) {
+
+        if (call.name.toString().equals("requests.get")) {
+            val httpClientOverlay =
+                list
+                    .flatMap { it.overlays.filterIsInstance<HttpClienttmp>() }
+                    .firstOrNull { it.name.toString().contains("requests") }
+
+            httpClientOverlay?.let {
+                newHttpOpGetNode(call, it, what = call.arguments.firstOrNull())
+            }
+        } else if (call.name.toString().contains("httpx")) {
+            val httpClientOverlay =
+                list
+                    .flatMap { it.overlays.filterIsInstance<HttpClienttmp>() }
+                    .firstOrNull { it.name.toString().contains("httpx") }
+
+            httpClientOverlay?.let {
+                newHttpOpGetNode(call, it, what = call.arguments.firstOrNull())
+            }
+        } else if (call.name.toString().equals("grequests.put")) {
+            val httpClientOverlay =
+                list
+                    .flatMap { it.overlays.filterIsInstance<HttpClienttmp>() }
+                    .firstOrNull { it.name.toString().contains("grequests") }
+
+            httpClientOverlay?.let {
+                newHttpOpGetNode(call, it, what = call.arguments.firstOrNull())
             }
         }
     }

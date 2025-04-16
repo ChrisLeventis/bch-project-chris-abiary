@@ -1,1 +1,7 @@
 https://github.com/memt24/sp2ytmusic/tree/d49a14a79502625166664b464cf66ddc4cb8a104
+
+nehmen
+
+manuelle violations:
+
+1 +2 +1 (nicht erkennbar daten werden über get als header mit geschickt) +2 nicht erkannt wegen gleiche wie davor + 2 wegen gleiche

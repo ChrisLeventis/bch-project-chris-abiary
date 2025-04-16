@@ -26,7 +26,7 @@
 package de.fraunhofer.aisec.cpg.graph.concepts.database
 
 import de.fraunhofer.aisec.cpg.graph.Node
-import de.fraunhofer.aisec.cpg.graph.concepts.Operation
+import de.fraunhofer.aisec.cpg.graph.concepts.PersistingOperation
 
 abstract class DatabaseOperation(underlyingNode: Node, override val concept: Database) :
-    Operation(underlyingNode = underlyingNode, concept = concept)
+    PersistingOperation(underlyingNode = underlyingNode, concept = concept)

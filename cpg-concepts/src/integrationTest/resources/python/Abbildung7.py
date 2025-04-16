@@ -6,4 +6,4 @@ app = Flask(__name__)
 @app.route('/submit', methods=['GET'])
 def submit_secret():
     secret = request.json.get("key")
-    requests.post("https://example.com", json={"secret": secret})
+    requests.post("https://example.com", secret)

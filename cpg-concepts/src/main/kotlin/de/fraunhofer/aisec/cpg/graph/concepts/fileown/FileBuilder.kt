@@ -43,7 +43,7 @@ fun MetadataProvider.newFileOpWrite(
 ): FileOpWrite {
     val node = FileOpWrite(underlyingNode = underlyingNode, concept = handler, what = what)
     node.codeAndLocationFrom(underlyingNode)
-    node.name = Name("[FileOpWrite" + underlyingNode.name.toString() + "]")
+    node.name = Name("[FileOperation" + underlyingNode.name.toString() + "]")
     (underlyingNode as? CallExpression)?.let { it.arguments.forEach { arg -> arg.nextDFG += node } }
     NodeBuilder.log(node)
     return node

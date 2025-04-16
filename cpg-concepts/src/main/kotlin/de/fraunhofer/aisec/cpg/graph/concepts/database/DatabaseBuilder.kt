@@ -47,7 +47,7 @@ fun MetadataProvider.newDatabaseAdd(
     val node = DatabaseOpAdd(underlyingNode = underlyingNode, concept = db, what = what)
     node.codeAndLocationFrom(underlyingNode)
 
-    node.name = Name("DatabaseAdd[" + underlyingNode.name.toString() + "]")
+    node.name = Name("DatabaseOperation[" + underlyingNode.name.toString() + "]")
 
     (underlyingNode as? CallExpression)?.let { it.arguments.forEach { arg -> arg.nextDFG += node } }
 

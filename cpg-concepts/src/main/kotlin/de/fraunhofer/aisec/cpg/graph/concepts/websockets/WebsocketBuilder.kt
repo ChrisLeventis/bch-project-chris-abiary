@@ -43,7 +43,7 @@ fun MetadataProvider.newWebsocketOpSendNode(
 ): WebsocketOpSend {
     val node = WebsocketOpSend(underlyingNode = underlyingNode, concept = client, what = what)
     node.codeAndLocationFrom(underlyingNode)
-    node.name = Name("WebSocketOp[" + underlyingNode.name.toString() + "]")
+    node.name = Name("WebSocketOperation[" + underlyingNode.name.toString() + "]")
     (underlyingNode as? CallExpression)?.let { it.arguments.forEach { arg -> arg.nextDFG += node } }
     NodeBuilder.log(node)
     return node

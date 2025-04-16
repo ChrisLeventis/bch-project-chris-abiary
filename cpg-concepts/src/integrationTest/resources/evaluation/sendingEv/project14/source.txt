@@ -1,3 +1,0 @@
-https://github.com/tms29-aub/503M-project/tree/3c8224a72b06149c37c17027a332e32ff3e6e952
-
-geht nicht wegen dictionary access

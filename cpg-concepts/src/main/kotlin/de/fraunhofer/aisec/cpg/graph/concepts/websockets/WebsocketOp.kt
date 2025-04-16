@@ -26,7 +26,7 @@
 package de.fraunhofer.aisec.cpg.graph.concepts.websockets
 
 import de.fraunhofer.aisec.cpg.graph.Node
-import de.fraunhofer.aisec.cpg.graph.concepts.Operation
+import de.fraunhofer.aisec.cpg.graph.concepts.SendingOperation
 
 abstract class WebsocketOp(underlyingNode: Node, override val concept: WebsocketClient) :
-    Operation(underlyingNode = underlyingNode, concept = concept)
+    SendingOperation(underlyingNode = underlyingNode, concept = concept)

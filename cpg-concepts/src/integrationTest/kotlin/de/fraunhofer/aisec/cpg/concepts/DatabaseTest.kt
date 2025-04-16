@@ -28,6 +28,7 @@ package de.fraunhofer.aisec.cpg.concepts
 import de.fraunhofer.aisec.cpg.frontends.python.PythonLanguage
 import de.fraunhofer.aisec.cpg.graph.*
 import de.fraunhofer.aisec.cpg.graph.concepts.Operation
+import de.fraunhofer.aisec.cpg.graph.concepts.SendingOperation
 import de.fraunhofer.aisec.cpg.graph.concepts.database.Database
 import de.fraunhofer.aisec.cpg.graph.concepts.database.DatabaseOpAdd
 import de.fraunhofer.aisec.cpg.graph.concepts.database.DatabaseOperation
@@ -554,6 +555,38 @@ class DatabaseTest {
     }
 
     @Test
+    fun testNoSendWithEncrypt2() {
+        val topLevel = File("src/integrationTest/resources/python")
+        val result =
+            analyze(listOf(topLevel.resolve("encryptTest.py")), topLevel.toPath(), true) {
+                it.registerLanguage<PythonLanguage>()
+                it.registerPass<HttpPass>()
+                it.registerPass<WebsocketPass>()
+                it.registerPass<RequestObjectPass>()
+            }
+        val calls = result.calls.flatMap { it.overlays.filterIsInstance<RequestOp>() }
+        val matchingCalls =
+            calls.filter {
+                (it.what as? Literal<*>)?.value.toString() == "secret" ||
+                    (it.what as? Literal<*>)?.value.toString() == "temperature"
+            }
+
+        val paths =
+            matchingCalls.flatMap {
+                it.followNextDFGEdgesUntilHit { node -> node is SendingOperation }.fulfilled
+            }
+        val violations =
+            paths.filter { list ->
+                list.none { entry ->
+                    entry is CallExpression && entry.name.toString().contains("encrypt")
+                }
+            }
+
+        val list = 3
+        val tmp = 1
+    }
+
+    @Test
     fun testNoLoggingWithEncrypt() {
         val topLevel = File("src/integrationTest/resources/python")
         val result =
@@ -699,6 +732,37 @@ class DatabaseTest {
             analyze(listOf(topLevel.resolve("sqlalchemyerror.py")), topLevel.toPath(), true) {
                 it.registerLanguage<PythonLanguage>()
                 it.registerPass<DatabasePass>()
+            }
+
+        val list = 3
+        val tmp = 1
+    }
+
+    @Test
+    fun testinit() {
+        val topLevel = File("src/integrationTest/resources/python")
+        val result =
+            analyze(listOf(topLevel.resolve("__init__.py")), topLevel.toPath(), true) {
+                it.registerLanguage<PythonLanguage>()
+                it.registerPass<DatabasePass>()
+                it.registerPass<RequestObjectPass>()
+            }
+        val calls = result.calls.flatMap { it.overlays.filterIsInstance<RequestOp>() }
+        val matchingCalls =
+            calls.filter {
+                (it.what as? Literal<*>)?.value.toString() == "secret" ||
+                    (it.what as? Literal<*>)?.value.toString() == "temperature"
+            }
+
+        val paths =
+            matchingCalls.flatMap {
+                it.followNextDFGEdgesUntilHit { node -> node is DatabaseOperation }.fulfilled
+            }
+        val violations =
+            paths.filter { list ->
+                list.none { entry ->
+                    entry is CallExpression && entry.name.toString().contains("encrypt")
+                }
             }
 
         val list = 3

@@ -50,7 +50,7 @@ fun MetadataProvider.newRequestOpForm(
             isResourceHandler = isResourceHandlerr,
         )
     node.codeAndLocationFrom(underlyingNode)
-    node.name = Name("RequestOpForm[" + underlyingNode.name.toString() + "]")
+    node.name = Name("RequestOperation[" + underlyingNode.name.toString() + "]")
 
     (underlyingNode as? CallExpression)?.let { node.nextDFG = it.nextDFG }
 
@@ -65,7 +65,7 @@ fun MetadataProvider.newRequestOpJson(
 ): RequestOpJson {
     val node = RequestOpJson(underlyingNode = underlyingNode, concept = requestOb, what = what)
     node.codeAndLocationFrom(underlyingNode)
-    node.name = Name("RequestOpJson[" + underlyingNode.name.toString() + "]")
+    node.name = Name("RequestOperation[" + underlyingNode.name.toString() + "]")
 
     (underlyingNode as? CallExpression)?.let { node.nextDFG = it.nextDFG }
 
@@ -80,7 +80,7 @@ fun MetadataProvider.newRequestOpArgs(
 ): RequestOpArgs {
     val node = RequestOpArgs(underlyingNode = underlyingNode, concept = requestOb, what = what)
     node.codeAndLocationFrom(underlyingNode)
-    node.name = Name("RequestOpArgs[" + underlyingNode.name.toString() + "]")
+    node.name = Name("RequestOperation[" + underlyingNode.name.toString() + "]")
 
     (underlyingNode as? CallExpression)?.let { node.nextDFG = it.nextDFG }
 
@@ -95,7 +95,7 @@ fun MetadataProvider.newRequestOpJsonTwo(
 ): RequestOpJsonTwo {
     val node = RequestOpJsonTwo(underlyingNode = underlyingNode, concept = requestOb, what = what)
     node.codeAndLocationFrom(underlyingNode)
-    node.name = Name("RequestOpJsonKey[" + underlyingNode.name.toString() + "]")
+    node.name = Name("RequestOperation[" + underlyingNode.name.toString() + "]")
 
     (underlyingNode as? CallExpression)?.let { node.nextDFG = it.nextDFG }
 
