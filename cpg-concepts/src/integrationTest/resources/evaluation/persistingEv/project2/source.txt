@@ -1,0 +1,7 @@
+https://github.com/VaibhavMakde/Blog-API-flask-framework/tree/7003d21ec24af365c7c3526fbf6693e2c0f80ce5
+
+nehemn
+
+manuelle violations
+eigentlich 6, aber ein wert wird gehasht bevor er in die datanbank geht
+Test findet 6 mit rule granularität für hashes fidner er 5

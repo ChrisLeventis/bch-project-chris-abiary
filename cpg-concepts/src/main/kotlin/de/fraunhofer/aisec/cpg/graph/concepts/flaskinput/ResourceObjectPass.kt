@@ -28,7 +28,7 @@ package de.fraunhofer.aisec.cpg.graph.concepts.flaskinput
 import de.fraunhofer.aisec.cpg.TranslationContext
 import de.fraunhofer.aisec.cpg.graph.*
 import de.fraunhofer.aisec.cpg.graph.concepts.Operation
-import de.fraunhofer.aisec.cpg.graph.concepts.flaskinput.request.RequestOp
+import de.fraunhofer.aisec.cpg.graph.concepts.flaskinput.request.HTTPRequestAccess
 import de.fraunhofer.aisec.cpg.graph.declarations.FunctionDeclaration
 import de.fraunhofer.aisec.cpg.graph.statements.expressions.CallExpression
 import de.fraunhofer.aisec.cpg.passes.ComponentPass
@@ -45,7 +45,7 @@ class ResourceObjectPass(ctx: TranslationContext) : ComponentPass(ctx) {
         comp.calls.forEach { call ->
             call.overlays.forEach {
                 when (it) {
-                    is RequestOp -> {
+                    is HTTPRequestAccess -> {
                         handleResourceObject(it, call)
                     }
                 }

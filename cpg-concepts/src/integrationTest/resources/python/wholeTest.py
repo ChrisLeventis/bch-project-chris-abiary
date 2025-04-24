@@ -28,7 +28,7 @@ def resourceHandler(func):
 def submit_secret():
 
     secret = request.form.get('secret', '')
-    secret = request.form.get('no secret', '')
+    nosecret = request.form.get('no secret', '')
 
     if not secret:
         return "No secret provided!", 400

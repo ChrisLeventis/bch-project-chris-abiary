@@ -1,1 +1,5 @@
-https://github.com/Ascendina/wheatherapi/tree/c498f4e9c6811ca4dcb03a9e27f285971ea215e1
+https://github.com/adamchainz/plugincompat/tree/99ad8aa19226f6587e1166fff91108573e78e8ad
+
+nehmen
+
+manuelle 0 cpg 0

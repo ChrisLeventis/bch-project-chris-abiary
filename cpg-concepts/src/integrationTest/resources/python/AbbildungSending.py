@@ -1,3 +1,2 @@
 import requests
-
-requests.post()
+requests.post(data)

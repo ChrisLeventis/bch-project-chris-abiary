@@ -66,9 +66,7 @@ class RequestObjectPass(ctx: TranslationContext) : ComponentPass(ctx) {
                 var flag = false
                 if (base is Reference && base.name.toString().contains("request.form")) {
                     val requestOverlay =
-                        list
-                            .flatMap { it.overlays.filterIsInstance<RequestObjectNode>() }
-                            .firstOrNull()
+                        list.flatMap { it.overlays.filterIsInstance<HTTPInput>() }.firstOrNull()
                     val dec =
                         call.followPrevEOGEdgesUntilHit { node: Node ->
                             node is FunctionDeclaration
@@ -83,7 +81,7 @@ class RequestObjectPass(ctx: TranslationContext) : ComponentPass(ctx) {
                     }
 
                     requestOverlay?.let {
-                        newRequestOpForm(call, it, what = call.arguments.firstOrNull(), flag)
+                        newRequestOpForm(call, it, key = call.arguments.firstOrNull(), flag)
                     }
                 } else if (
                     base is MemberExpression &&
@@ -91,17 +89,13 @@ class RequestObjectPass(ctx: TranslationContext) : ComponentPass(ctx) {
                         base.base.name.toString().contains("request")
                 ) {
                     val requestOverlay =
-                        list
-                            .flatMap { it.overlays.filterIsInstance<RequestObjectNode>() }
-                            .firstOrNull()
+                        list.flatMap { it.overlays.filterIsInstance<HTTPInput>() }.firstOrNull()
                     requestOverlay?.let {
-                        newRequestOpForm(call, it, what = call.arguments.firstOrNull(), flag)
+                        newRequestOpForm(call, it, key = call.arguments.firstOrNull(), flag)
                     }
                 } else if (base is Reference && base.name.toString().contains("request.args")) {
                     val requestOverlay =
-                        list
-                            .flatMap { it.overlays.filterIsInstance<RequestObjectNode>() }
-                            .firstOrNull()
+                        list.flatMap { it.overlays.filterIsInstance<HTTPInput>() }.firstOrNull()
                     val dec =
                         call.followPrevEOGEdgesUntilHit { node: Node ->
                             node is FunctionDeclaration
@@ -109,7 +103,7 @@ class RequestObjectPass(ctx: TranslationContext) : ComponentPass(ctx) {
                     val decReal = dec.fulfilled.first().last()
 
                     requestOverlay?.let {
-                        newRequestOpArgs(call, it, what = call.arguments.firstOrNull())
+                        newRequestOpArgs(call, it, key = call.arguments.firstOrNull())
                     }
                 } else if (
                     base is MemberExpression &&
@@ -117,17 +111,13 @@ class RequestObjectPass(ctx: TranslationContext) : ComponentPass(ctx) {
                         base.base.name.toString().contains("request")
                 ) {
                     val requestOverlay =
-                        list
-                            .flatMap { it.overlays.filterIsInstance<RequestObjectNode>() }
-                            .firstOrNull()
+                        list.flatMap { it.overlays.filterIsInstance<HTTPInput>() }.firstOrNull()
                     requestOverlay?.let {
-                        newRequestOpArgs(call, it, what = call.arguments.firstOrNull())
+                        newRequestOpArgs(call, it, key = call.arguments.firstOrNull())
                     }
                 } else if (base is Reference && base.name.toString().contains("request.json")) {
                     val requestOverlay =
-                        list
-                            .flatMap { it.overlays.filterIsInstance<RequestObjectNode>() }
-                            .firstOrNull()
+                        list.flatMap { it.overlays.filterIsInstance<HTTPInput>() }.firstOrNull()
                     val dec =
                         call.followPrevEOGEdgesUntilHit { node: Node ->
                             node is FunctionDeclaration
@@ -135,7 +125,7 @@ class RequestObjectPass(ctx: TranslationContext) : ComponentPass(ctx) {
                     val decReal = dec.fulfilled.first().last()
 
                     requestOverlay?.let {
-                        newRequestOpJsonTwo(call, it, what = call.arguments.firstOrNull())
+                        newRequestOpJsonTwo(call, it, key = call.arguments.firstOrNull())
                     }
                 } else if (
                     base is MemberExpression &&
@@ -143,11 +133,9 @@ class RequestObjectPass(ctx: TranslationContext) : ComponentPass(ctx) {
                         base.base.name.toString().contains("request")
                 ) {
                     val requestOverlay =
-                        list
-                            .flatMap { it.overlays.filterIsInstance<RequestObjectNode>() }
-                            .firstOrNull()
+                        list.flatMap { it.overlays.filterIsInstance<HTTPInput>() }.firstOrNull()
                     requestOverlay?.let {
-                        newRequestOpJsonTwo(call, it, what = call.arguments.firstOrNull())
+                        newRequestOpJsonTwo(call, it, key = call.arguments.firstOrNull())
                     }
                 }
             }
@@ -157,8 +145,8 @@ class RequestObjectPass(ctx: TranslationContext) : ComponentPass(ctx) {
     private fun handleRequestObjectJson(call: CallExpression, list: List<ImportDeclaration>) {
         if (call.name.contains("request") || call.code.toString().contains("request")) {
             val requestOverlay =
-                list.flatMap { it.overlays.filterIsInstance<RequestObjectNode>() }.firstOrNull()
-            requestOverlay?.let { newRequestOpJson(call, it, what = call.arguments.firstOrNull()) }
+                list.flatMap { it.overlays.filterIsInstance<HTTPInput>() }.firstOrNull()
+            requestOverlay?.let { newRequestOpJson(call, it, key = call.arguments.firstOrNull()) }
         }
     }
 }

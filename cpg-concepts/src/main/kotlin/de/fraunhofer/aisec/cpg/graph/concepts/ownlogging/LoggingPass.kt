@@ -28,11 +28,7 @@ package de.fraunhofer.aisec.cpg.graph.concepts.ownlogging
 import de.fraunhofer.aisec.cpg.TranslationContext
 import de.fraunhofer.aisec.cpg.graph.Component
 import de.fraunhofer.aisec.cpg.graph.calls
-import de.fraunhofer.aisec.cpg.graph.memberExpressions
-import de.fraunhofer.aisec.cpg.graph.statements.expressions.CallExpression
-import de.fraunhofer.aisec.cpg.graph.statements.expressions.Expression
-import de.fraunhofer.aisec.cpg.graph.statements.expressions.MemberCallExpression
-import de.fraunhofer.aisec.cpg.graph.statements.expressions.MemberExpression
+import de.fraunhofer.aisec.cpg.graph.statements.expressions.*
 import de.fraunhofer.aisec.cpg.passes.ComponentPass
 import de.fraunhofer.aisec.cpg.passes.configuration.ExecuteLate
 
@@ -43,40 +39,46 @@ class LoggingPass(ctx: TranslationContext) : ComponentPass(ctx) {
     }
 
     override fun accept(comp: Component) {
-        comp.memberExpressions
-            .filter { it.name.lastPartsMatch("logger") }
-            .forEach { handleLogger(it) }
-        """
-        comp.calls.filter { it.name.lastPartsMatch("error") }.forEach { handleLogOpError(it) }
+        comp.calls
+            .filter { it.name.lastPartsMatch("Flask") }
+            .forEach { handleLogger(it) } // inferredLogger
 
-        comp.calls.filter { it.name.lastPartsMatch("info") }.forEach { handleLogOpInfo(it) }
-
-        comp.calls.filter { it.name.lastPartsMatch("debug") }.forEach { handleLogOpDebug(it) }
-
-        comp.calls.filter { it.name.lastPartsMatch("critical") }.forEach { handleLogOpCritical(it) }
-
-        comp.calls.filter { it.name.lastPartsMatch("warning") }.forEach { handleLogOpWarning(it) }
-        """
         comp.calls.forEach { call ->
             when {
-                call.name.lastPartsMatch("error") -> handleLogOpError(call)
-                call.name.lastPartsMatch("info") -> handleLogOpInfo(call)
-                call.name.lastPartsMatch("debug") -> handleLogOpDebug(call)
-                call.name.lastPartsMatch("critical") -> handleLogOpCritical(call)
-                call.name.lastPartsMatch("warning") -> handleLogOpWarning(call)
+                call.name.lastPartsMatch("error") -> handleLogOpError(call, comp.calls)
+                call.name.lastPartsMatch("info") -> handleLogOpInfo(call, comp.calls)
+                call.name.lastPartsMatch("debug") -> handleLogOpDebug(call, comp.calls)
+                call.name.lastPartsMatch("critical") -> handleLogOpCritical(call, comp.calls)
+                call.name.lastPartsMatch("warning") -> handleLogOpWarning(call, comp.calls)
             }
         }
     }
 
-    private fun handleLogOpError(addCall: CallExpression) {
+    private fun handleLogOpError(addCall: CallExpression, list: List<CallExpression>) {
         when (addCall) {
             is MemberCallExpression -> {
                 val base = addCall.base
                 when (base) {
                     is MemberExpression ->
                         if (base.name.toString().contains("logger")) {
-                            base.overlays.filterIsInstance<LoggerNode>().singleOrNull()?.let { lN ->
-                                newLogOpError(addCall, lN, addCall.arguments.firstOrNull())
+                            val logger =
+                                list
+                                    .flatMap { it.overlays.filterIsInstance<LoggerNode>() }
+                                    .firstOrNull()
+
+                            if (logger != null) {
+                                newLogOpError(addCall, logger, addCall.arguments.firstOrNull())
+                            }
+                        }
+                    is Reference ->
+                        if (base.name.toString().contains("app.logger")) {
+                            val logger =
+                                list
+                                    .flatMap { it.overlays.filterIsInstance<LoggerNode>() }
+                                    .firstOrNull()
+
+                            if (logger != null) {
+                                newLogOpError(addCall, logger, addCall.arguments.firstOrNull())
                             }
                         }
                 }
@@ -84,15 +86,31 @@ class LoggingPass(ctx: TranslationContext) : ComponentPass(ctx) {
         }
     }
 
-    private fun handleLogOpInfo(addCall: CallExpression) {
+    private fun handleLogOpInfo(addCall: CallExpression, list: List<CallExpression>) {
         when (addCall) {
             is MemberCallExpression -> {
                 val base = addCall.base
                 when (base) {
                     is MemberExpression ->
                         if (base.name.toString().contains("logger")) {
-                            base.overlays.filterIsInstance<LoggerNode>().singleOrNull()?.let { lN ->
-                                newLogOpInfo(addCall, lN, addCall.arguments.firstOrNull())
+                            val logger =
+                                list
+                                    .flatMap { it.overlays.filterIsInstance<LoggerNode>() }
+                                    .firstOrNull()
+
+                            if (logger != null) {
+                                newLogOpInfo(addCall, logger, addCall.arguments.firstOrNull())
+                            }
+                        }
+                    is Reference ->
+                        if (base.name.toString().contains("app.logger")) {
+                            val logger =
+                                list
+                                    .flatMap { it.overlays.filterIsInstance<LoggerNode>() }
+                                    .firstOrNull()
+
+                            if (logger != null) {
+                                newLogOpInfo(addCall, logger, addCall.arguments.firstOrNull())
                             }
                         }
                 }
@@ -100,15 +118,31 @@ class LoggingPass(ctx: TranslationContext) : ComponentPass(ctx) {
         }
     }
 
-    private fun handleLogOpDebug(addCall: CallExpression) {
+    private fun handleLogOpDebug(addCall: CallExpression, list: List<CallExpression>) {
         when (addCall) {
             is MemberCallExpression -> {
                 val base = addCall.base
                 when (base) {
                     is MemberExpression ->
                         if (base.name.toString().contains("logger")) {
-                            base.overlays.filterIsInstance<LoggerNode>().singleOrNull()?.let { lN ->
-                                newLogOpDebug(addCall, lN, addCall.arguments.firstOrNull())
+                            val logger =
+                                list
+                                    .flatMap { it.overlays.filterIsInstance<LoggerNode>() }
+                                    .firstOrNull()
+
+                            if (logger != null) {
+                                newLogOpDebug(addCall, logger, addCall.arguments.firstOrNull())
+                            }
+                        }
+                    is Reference ->
+                        if (base.name.toString().contains("app.logger")) {
+                            val logger =
+                                list
+                                    .flatMap { it.overlays.filterIsInstance<LoggerNode>() }
+                                    .firstOrNull()
+
+                            if (logger != null) {
+                                newLogOpDebug(addCall, logger, addCall.arguments.firstOrNull())
                             }
                         }
                 }
@@ -116,15 +150,31 @@ class LoggingPass(ctx: TranslationContext) : ComponentPass(ctx) {
         }
     }
 
-    private fun handleLogOpCritical(addCall: CallExpression) {
+    private fun handleLogOpCritical(addCall: CallExpression, list: List<CallExpression>) {
         when (addCall) {
             is MemberCallExpression -> {
                 val base = addCall.base
                 when (base) {
                     is MemberExpression ->
                         if (base.name.toString().contains("logger")) {
-                            base.overlays.filterIsInstance<LoggerNode>().singleOrNull()?.let { lN ->
-                                newLogOpCritical(addCall, lN, addCall.arguments.firstOrNull())
+                            val logger =
+                                list
+                                    .flatMap { it.overlays.filterIsInstance<LoggerNode>() }
+                                    .firstOrNull()
+
+                            if (logger != null) {
+                                newLogOpCritical(addCall, logger, addCall.arguments.firstOrNull())
+                            }
+                        }
+                    is Reference ->
+                        if (base.name.toString().contains("app.logger")) {
+                            val logger =
+                                list
+                                    .flatMap { it.overlays.filterIsInstance<LoggerNode>() }
+                                    .firstOrNull()
+
+                            if (logger != null) {
+                                newLogOpCritical(addCall, logger, addCall.arguments.firstOrNull())
                             }
                         }
                 }
@@ -132,16 +182,31 @@ class LoggingPass(ctx: TranslationContext) : ComponentPass(ctx) {
         }
     }
 
-    private fun handleLogOpWarning(addCall: CallExpression) {
+    private fun handleLogOpWarning(addCall: CallExpression, list: List<CallExpression>) {
         when (addCall) {
             is MemberCallExpression -> {
                 val base = addCall.base
                 when (base) {
                     is MemberExpression ->
                         if (base.name.toString().contains("logger")) {
-                            base.overlays.filterIsInstance<LoggerNode>().singleOrNull()?.let { lN
-                                -> // wird nicht funktionieren nach änderung
-                                newLogOpWarning(addCall, lN, addCall.arguments.firstOrNull())
+                            val logger =
+                                list
+                                    .flatMap { it.overlays.filterIsInstance<LoggerNode>() }
+                                    .firstOrNull()
+
+                            if (logger != null) {
+                                newLogOpWarning(addCall, logger, addCall.arguments.firstOrNull())
+                            }
+                        }
+                    is Reference ->
+                        if (base.name.toString().contains("app.logger")) {
+                            val logger =
+                                list
+                                    .flatMap { it.overlays.filterIsInstance<LoggerNode>() }
+                                    .firstOrNull()
+
+                            if (logger != null) {
+                                newLogOpWarning(addCall, logger, addCall.arguments.firstOrNull())
                             }
                         }
                 }

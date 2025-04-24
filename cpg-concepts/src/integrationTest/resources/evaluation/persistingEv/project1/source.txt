@@ -1,3 +1,7 @@
-https://github.com/taoztw/Transformer/tree/850cab55665a09a6f8a490a6d9e8b32b91804160
+https://github.com/yzgyyang/readinglist-api/tree/69fb640a29707bd4e8ffb3d4f766116849078e25
 
-eine wird nicht erkannt (different access) eine wird erkannt
+hier mal das mit init ausprobieren
+
+nehmen
+manuelle violations:
+8  test findet 8, test findet eine violation meher die die manulle nicht gefunden hat aber manuelle hat aich eine mehr gefunden die der test nicht gefunden hat

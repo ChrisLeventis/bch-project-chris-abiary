@@ -28,31 +28,31 @@ package de.fraunhofer.aisec.cpg.graph.concepts.flaskinput.request
 import de.fraunhofer.aisec.cpg.graph.*
 import de.fraunhofer.aisec.cpg.graph.statements.expressions.CallExpression
 
-fun MetadataProvider.newRequestObjectNode(underlyingNode: Node): RequestObjectNode {
-    val node = RequestObjectNode(underlyingNode = underlyingNode)
+fun MetadataProvider.newRequestObjectNode(underlyingNode: Node): HTTPInput {
+    val node = HTTPInput(underlyingNode = underlyingNode)
     node.codeAndLocationFrom(underlyingNode)
-    node.name = Name("RequestObject")
+    node.name = Name("HTTPInput")
     NodeBuilder.log(node)
     return node
 }
 
 fun MetadataProvider.newRequestOpForm(
     underlyingNode: Node,
-    requestOb: RequestObjectNode,
-    what: Node?,
+    requestOb: HTTPInput,
+    key: Node?,
     isResourceHandlerr: Boolean,
-): RequestOpForm {
+): HTTPRequestAccessForm {
     val node =
-        RequestOpForm(
+        HTTPRequestAccessForm(
             underlyingNode = underlyingNode,
             concept = requestOb,
-            what = what,
+            key = key,
             isResourceHandler = isResourceHandlerr,
         )
     node.codeAndLocationFrom(underlyingNode)
-    node.name = Name("RequestOperation[" + underlyingNode.name.toString() + "]")
+    node.name = Name("HTTPAccess[" + underlyingNode.name.toString() + "]")
 
-    (underlyingNode as? CallExpression)?.let { node.nextDFG = it.nextDFG }
+    (underlyingNode as? CallExpression)?.let { node.nextDFG = it.nextDFG.toMutableSet() }
 
     NodeBuilder.log(node)
     return node
@@ -60,14 +60,15 @@ fun MetadataProvider.newRequestOpForm(
 
 fun MetadataProvider.newRequestOpJson(
     underlyingNode: Node,
-    requestOb: RequestObjectNode,
-    what: Node?,
-): RequestOpJson {
-    val node = RequestOpJson(underlyingNode = underlyingNode, concept = requestOb, what = what)
+    requestOb: HTTPInput,
+    key: Node?,
+): HTTPRequestAccessJson {
+    val node =
+        HTTPRequestAccessJson(underlyingNode = underlyingNode, concept = requestOb, key = key)
     node.codeAndLocationFrom(underlyingNode)
-    node.name = Name("RequestOperation[" + underlyingNode.name.toString() + "]")
+    node.name = Name("HTTPAccess[" + underlyingNode.name.toString() + "]")
 
-    (underlyingNode as? CallExpression)?.let { node.nextDFG = it.nextDFG }
+    (underlyingNode as? CallExpression)?.let { node.nextDFG = it.nextDFG.toMutableSet() }
 
     NodeBuilder.log(node)
     return node
@@ -75,14 +76,15 @@ fun MetadataProvider.newRequestOpJson(
 
 fun MetadataProvider.newRequestOpArgs(
     underlyingNode: Node,
-    requestOb: RequestObjectNode,
-    what: Node?,
-): RequestOpArgs {
-    val node = RequestOpArgs(underlyingNode = underlyingNode, concept = requestOb, what = what)
+    requestOb: HTTPInput,
+    key: Node?,
+): HTTPRequestAccessArgs {
+    val node =
+        HTTPRequestAccessArgs(underlyingNode = underlyingNode, concept = requestOb, key = key)
     node.codeAndLocationFrom(underlyingNode)
-    node.name = Name("RequestOperation[" + underlyingNode.name.toString() + "]")
+    node.name = Name("HTTPAccess[" + underlyingNode.name.toString() + "]")
 
-    (underlyingNode as? CallExpression)?.let { node.nextDFG = it.nextDFG }
+    (underlyingNode as? CallExpression)?.let { node.nextDFG = it.nextDFG.toMutableSet() }
 
     NodeBuilder.log(node)
     return node
@@ -90,14 +92,15 @@ fun MetadataProvider.newRequestOpArgs(
 
 fun MetadataProvider.newRequestOpJsonTwo(
     underlyingNode: Node,
-    requestOb: RequestObjectNode,
-    what: Node?,
-): RequestOpJsonTwo {
-    val node = RequestOpJsonTwo(underlyingNode = underlyingNode, concept = requestOb, what = what)
+    requestOb: HTTPInput,
+    key: Node?,
+): HTTPRequestAccessJsonTwo {
+    val node =
+        HTTPRequestAccessJsonTwo(underlyingNode = underlyingNode, concept = requestOb, key = key)
     node.codeAndLocationFrom(underlyingNode)
-    node.name = Name("RequestOperation[" + underlyingNode.name.toString() + "]")
+    node.name = Name("HTTPAccess[" + underlyingNode.name.toString() + "]")
 
-    (underlyingNode as? CallExpression)?.let { node.nextDFG = it.nextDFG }
+    (underlyingNode as? CallExpression)?.let { node.nextDFG = it.nextDFG.toMutableSet() }
 
     NodeBuilder.log(node)
     return node

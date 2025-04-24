@@ -27,6 +27,7 @@ package de.fraunhofer.aisec.cpg.concepts
 
 import de.fraunhofer.aisec.cpg.frontends.python.PythonLanguage
 import de.fraunhofer.aisec.cpg.graph.*
+import de.fraunhofer.aisec.cpg.graph.concepts.InputSource
 import de.fraunhofer.aisec.cpg.graph.concepts.Operation
 import de.fraunhofer.aisec.cpg.graph.concepts.SendingOperation
 import de.fraunhofer.aisec.cpg.graph.concepts.database.Database
@@ -253,7 +254,7 @@ class DatabaseTest {
                 it.registerLanguage<PythonLanguage>()
                 it.registerPass<RequestObjectPass>()
             }
-        val calls = result.calls.flatMap { it.overlays.filterIsInstance<RequestOpForm>() }
+        val calls = result.calls.flatMap { it.overlays.filterIsInstance<HTTPRequestAccessForm>() }
 
         val tmp = 11
         assertTrue(calls.isNotEmpty())
@@ -343,7 +344,7 @@ class DatabaseTest {
                 it.registerLanguage<PythonLanguage>()
                 it.registerPass<HttpPass>()
             }
-        val calls = result.calls.flatMap { it.overlays.filterIsInstance<RequestOpForm>() }
+        val calls = result.calls.flatMap { it.overlays.filterIsInstance<HTTPRequestAccessForm>() }
 
         val tmp = 11
         assertTrue(calls.isNotEmpty())
@@ -413,7 +414,7 @@ class DatabaseTest {
                 it.registerLanguage<PythonLanguage>()
                 it.registerPass<RequestObjectPass>()
             }
-        val calls = result.calls.flatMap { it.overlays.filterIsInstance<RequestOpJson>() }
+        val calls = result.calls.flatMap { it.overlays.filterIsInstance<HTTPRequestAccessJson>() }
 
         val tmp = 11
         assertTrue(calls.isNotEmpty())
@@ -428,7 +429,7 @@ class DatabaseTest {
                 it.registerPass<RequestObjectPass>()
                 it.registerPass<DatabasePass>()
             }
-        val calls = result.calls.flatMap { it.overlays.filterIsInstance<RequestOp>() }
+        val calls = result.calls.flatMap { it.overlays.filterIsInstance<HTTPRequestAccess>() }
         val paths =
             calls.flatMap {
                 it.followNextDFGEdgesUntilHit { node -> node is DatabaseOperation }.failed
@@ -447,7 +448,7 @@ class DatabaseTest {
                 it.registerPass<RequestObjectPass>()
                 it.registerPass<DatabasePass>()
             }
-        val calls = result.calls.flatMap { it.overlays.filterIsInstance<RequestOp>() }
+        val calls = result.calls.flatMap { it.overlays.filterIsInstance<HTTPRequestAccess>() }
         val paths =
             calls.flatMap {
                 it.followNextDFGEdgesUntilHit { node -> node is DatabaseOperation }.fulfilled
@@ -464,11 +465,11 @@ class DatabaseTest {
                 it.registerPass<WebsocketPass>()
                 it.registerPass<RequestObjectPass>()
             }
-        val calls = result.calls.flatMap { it.overlays.filterIsInstance<RequestOp>() }
+        val calls = result.calls.flatMap { it.overlays.filterIsInstance<HTTPRequestAccess>() }
         val matchingCalls =
             calls.filter {
-                (it.what as? Literal<*>)?.value.toString() == "secret" ||
-                    (it.what as? Literal<*>)?.value.toString() == "lastname"
+                (it.key as? Literal<*>)?.value.toString() == "secret" ||
+                    (it.key as? Literal<*>)?.value.toString() == "lastname"
             }
 
         val paths =
@@ -490,8 +491,8 @@ class DatabaseTest {
                 it.registerPass<HttpPass>()
                 it.registerPass<RequestObjectPass>()
             }
-        val calls = result.calls.flatMap { it.overlays.filterIsInstance<RequestOp>() }
-        val matchingCalls = calls.filter { (it.what as? Literal<*>)?.value.toString() == "secret" }
+        val calls = result.calls.flatMap { it.overlays.filterIsInstance<HTTPRequestAccess>() }
+        val matchingCalls = calls.filter { (it.key as? Literal<*>)?.value.toString() == "secret" }
 
         val paths =
             calls.flatMap {
@@ -509,8 +510,8 @@ class DatabaseTest {
                 it.registerLanguage<PythonLanguage>()
                 it.registerPass<DatabasePass>()
             }
-        val calls = result.calls.flatMap { it.overlays.filterIsInstance<RequestOp>() }
-        val matchingCalls = calls.filter { (it.what as? Literal<*>)?.value.toString() == "secret" }
+        val calls = result.calls.flatMap { it.overlays.filterIsInstance<HTTPRequestAccess>() }
+        val matchingCalls = calls.filter { (it.key as? Literal<*>)?.value.toString() == "secret" }
 
         val paths =
             calls.flatMap {
@@ -531,11 +532,11 @@ class DatabaseTest {
                 it.registerPass<WebsocketPass>()
                 it.registerPass<RequestObjectPass>()
             }
-        val calls = result.calls.flatMap { it.overlays.filterIsInstance<RequestOp>() }
+        val calls = result.calls.flatMap { it.overlays.filterIsInstance<HTTPRequestAccess>() }
         val matchingCalls =
             calls.filter {
-                (it.what as? Literal<*>)?.value.toString() == "secret" ||
-                    (it.what as? Literal<*>)?.value.toString() == "temperature"
+                (it.key as? Literal<*>)?.value.toString() == "secret" ||
+                    (it.key as? Literal<*>)?.value.toString() == "temperature"
             }
 
         val paths =
@@ -564,11 +565,11 @@ class DatabaseTest {
                 it.registerPass<WebsocketPass>()
                 it.registerPass<RequestObjectPass>()
             }
-        val calls = result.calls.flatMap { it.overlays.filterIsInstance<RequestOp>() }
+        val calls = result.calls.flatMap { it.overlays.filterIsInstance<HTTPRequestAccess>() }
         val matchingCalls =
             calls.filter {
-                (it.what as? Literal<*>)?.value.toString() == "secret" ||
-                    (it.what as? Literal<*>)?.value.toString() == "temperature"
+                (it.key as? Literal<*>)?.value.toString() == "secret" ||
+                    (it.key as? Literal<*>)?.value.toString() == "temperature"
             }
 
         val paths =
@@ -595,11 +596,11 @@ class DatabaseTest {
                 it.registerPass<LoggingPass>()
                 it.registerPass<RequestObjectPass>()
             }
-        val calls = result.calls.flatMap { it.overlays.filterIsInstance<RequestOp>() }
+        val calls = result.calls.flatMap { it.overlays.filterIsInstance<HTTPRequestAccess>() }
         val matchingCalls =
             calls.filter {
-                (it.what as? Literal<*>)?.value.toString() == "secret" ||
-                    (it.what as? Literal<*>)?.value.toString() == "temperature"
+                (it.key as? Literal<*>)?.value.toString() == "secret" ||
+                    (it.key as? Literal<*>)?.value.toString() == "temperature"
             }
 
         val paths =
@@ -626,11 +627,11 @@ class DatabaseTest {
                 it.registerPass<DatabasePass>()
                 it.registerPass<RequestObjectPass>()
             }
-        val calls = result.calls.flatMap { it.overlays.filterIsInstance<RequestOp>() }
+        val calls = result.calls.flatMap { it.overlays.filterIsInstance<HTTPRequestAccess>() }
         val matchingCalls =
             calls.filter {
-                (it.what as? Literal<*>)?.value.toString() == "secret" ||
-                    (it.what as? Literal<*>)?.value.toString() == "temperature"
+                (it.key as? Literal<*>)?.value.toString() == "secret" ||
+                    (it.key as? Literal<*>)?.value.toString() == "temperature"
             }
 
         val paths =
@@ -665,7 +666,7 @@ class DatabaseTest {
                 it.registerPass<DatabasePass>()
                 it.registerPass<RequestObjectPass>()
             }
-        val calls = result.calls.flatMap { it.overlays.filterIsInstance<RequestOp>() }
+        val calls = result.calls.flatMap { it.overlays.filterIsInstance<HTTPRequestAccess>() }
 
         val paths =
             calls.flatMap {
@@ -695,7 +696,7 @@ class DatabaseTest {
                 it.registerPass<DatabasePass>()
                 it.registerPass<RequestObjectPass>()
             }
-        val calls = result.calls.flatMap { it.overlays.filterIsInstance<RequestOp>() }
+        val calls = result.calls.flatMap { it.overlays.filterIsInstance<HTTPRequestAccess>() }
 
         val paths =
             calls.flatMap {
@@ -742,16 +743,16 @@ class DatabaseTest {
     fun testinit() {
         val topLevel = File("src/integrationTest/resources/python")
         val result =
-            analyze(listOf(topLevel.resolve("__init__.py")), topLevel.toPath(), true) {
+            analyze(listOf(topLevel.resolve("carollus.py")), topLevel.toPath(), true) {
                 it.registerLanguage<PythonLanguage>()
                 it.registerPass<DatabasePass>()
                 it.registerPass<RequestObjectPass>()
             }
-        val calls = result.calls.flatMap { it.overlays.filterIsInstance<RequestOp>() }
+        val calls = result.calls.flatMap { it.overlays.filterIsInstance<HTTPRequestAccess>() }
         val matchingCalls =
             calls.filter {
-                (it.what as? Literal<*>)?.value.toString() == "secret" ||
-                    (it.what as? Literal<*>)?.value.toString() == "temperature"
+                (it.key as? Literal<*>)?.value.toString() == "secret" ||
+                    (it.key as? Literal<*>)?.value.toString() == "temperature"
             }
 
         val paths =
@@ -764,6 +765,45 @@ class DatabaseTest {
                     entry is CallExpression && entry.name.toString().contains("encrypt")
                 }
             }
+
+        val list = 3
+        val tmp = 1
+    }
+
+    @Test
+    fun testDepictionOfRUles() {
+        val topLevel = File("src/integrationTest/resources/python")
+        val result =
+            analyze(listOf(topLevel.resolve("wholeTest.py")), topLevel.toPath(), true) {
+                it.registerLanguage<PythonLanguage>()
+                it.registerPass<DatabasePass>()
+                it.registerPass<HttpPass>()
+                it.registerPass<RequestObjectPass>()
+            }
+
+        val violationsFoundCount =
+            result
+                .allChildren<Node>()
+                .flatMap { it.overlays.filterIsInstance<InputSource>() }
+                .flatMap {
+                    it.followNextDFGEdgesUntilHit { node -> node is SendingOperation }.fulfilled
+                }
+                .count()
+
+        val potentialViolationsFound1 =
+            result
+                .allChildren<Node>()
+                .flatMap { it.overlays.filterIsInstance<HTTPRequestAccess>() }
+                .filter { (it.key as? Literal<*>)?.value.toString() == "secret" }
+                .flatMap {
+                    it.followNextDFGEdgesUntilHit { node -> node is SendingOperation }.fulfilled
+                }
+                .filter { list ->
+                    list.none { entry ->
+                        entry is CallExpression && entry.name.toString().contains("encrypt")
+                    }
+                }
+                .count()
 
         val list = 3
         val tmp = 1
