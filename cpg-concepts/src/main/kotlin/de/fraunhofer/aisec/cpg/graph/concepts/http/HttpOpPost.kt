@@ -23,10 +23,9 @@
  *                    \______/ \__|       \______/
  *
  */
-package de.fraunhofer.aisec.cpg.graph.concepts.diskEncryption
+package de.fraunhofer.aisec.cpg.graph.concepts.http
 
 import de.fraunhofer.aisec.cpg.graph.Node
-import de.fraunhofer.aisec.cpg.graph.concepts.Operation
 
-abstract class SecretOperation(underlyingNode: Node, override val concept: Secret) :
-    Operation(underlyingNode = underlyingNode, concept = concept), IsDiskEncryption
+class HttpOpPost(underlyingNode: Node, override val concept: HttpClienttmp, val what: Node?) :
+    HttpOp(underlyingNode = underlyingNode, concept = concept)

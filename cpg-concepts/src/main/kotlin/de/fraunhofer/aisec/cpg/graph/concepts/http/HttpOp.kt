@@ -23,20 +23,10 @@
  *                    \______/ \__|       \______/
  *
  */
-package de.fraunhofer.aisec.cpg.graph.concepts.diskEncryption
+package de.fraunhofer.aisec.cpg.graph.concepts.http
 
 import de.fraunhofer.aisec.cpg.graph.Node
-import de.fraunhofer.aisec.cpg.graph.concepts.Concept
+import de.fraunhofer.aisec.cpg.graph.concepts.SendingOperation
 
-/** Represents a cipher suite. E.g. `AES-XTS-plain64` */
-class Cipher(underlyingNode: Node) :
-    Concept<CipherOperation>(underlyingNode = underlyingNode), IsDiskEncryption {
-    /** A string representing the cipher used, e.g. `AES-XTS-plain64`. */
-    var cipherName: String? = null
-
-    /** Cipher block size. */
-    var blockSize: Int? = null
-
-    /** Key size. */
-    var keySize: Int? = null
-}
+abstract class HttpOp(underlyingNode: Node, override val concept: HttpClienttmp) :
+    SendingOperation(underlyingNode = underlyingNode, concept = concept)

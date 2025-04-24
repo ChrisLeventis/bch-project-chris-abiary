@@ -23,11 +23,9 @@
  *                    \______/ \__|       \______/
  *
  */
-package de.fraunhofer.aisec.cpg.graph.concepts.diskEncryption
+package de.fraunhofer.aisec.cpg.graph.concepts.http
 
 import de.fraunhofer.aisec.cpg.graph.Node
 
-class CreateSecret(underlyingNode: Node, concept: Secret) :
-    SecretOperation(underlyingNode = underlyingNode, concept = concept) {
-    // TODO: which secret? specs (key size, cipher suite, storage)?
-}
+class HttpOpGet(underlyingNode: Node, override val concept: HttpClienttmp, val what: Node?) :
+    HttpOp(underlyingNode = underlyingNode, concept = concept)

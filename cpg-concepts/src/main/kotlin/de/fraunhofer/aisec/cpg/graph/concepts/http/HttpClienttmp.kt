@@ -23,6 +23,9 @@
  *                    \______/ \__|       \______/
  *
  */
-package de.fraunhofer.aisec.cpg.graph.concepts.ownEncrypt
+package de.fraunhofer.aisec.cpg.graph.concepts.http
 
-class OwnEncryptionPass {}
+import de.fraunhofer.aisec.cpg.graph.Node
+import de.fraunhofer.aisec.cpg.graph.concepts.Concept
+
+class HttpClienttmp(underlyingNode: Node) : Concept<HttpOp>(underlyingNode = underlyingNode)
