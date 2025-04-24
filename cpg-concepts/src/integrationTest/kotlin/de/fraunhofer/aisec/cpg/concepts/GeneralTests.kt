@@ -38,9 +38,9 @@ import de.fraunhofer.aisec.cpg.graph.concepts.fileown.FilePass
 import de.fraunhofer.aisec.cpg.graph.concepts.flaskinput.ResourceObjectNode
 import de.fraunhofer.aisec.cpg.graph.concepts.flaskinput.ResourceObjectPass
 import de.fraunhofer.aisec.cpg.graph.concepts.flaskinput.request.*
-import de.fraunhofer.aisec.cpg.graph.concepts.networkcomm.httpTmp.HttpClienttmp
-import de.fraunhofer.aisec.cpg.graph.concepts.networkcomm.httpTmp.HttpOp
-import de.fraunhofer.aisec.cpg.graph.concepts.networkcomm.httpTmp.HttpPass
+import de.fraunhofer.aisec.cpg.graph.concepts.http.HttpClienttmp
+import de.fraunhofer.aisec.cpg.graph.concepts.http.HttpOp
+import de.fraunhofer.aisec.cpg.graph.concepts.http.HttpPass
 import de.fraunhofer.aisec.cpg.graph.concepts.ownlogging.LogOp
 import de.fraunhofer.aisec.cpg.graph.concepts.ownlogging.LoggingPass
 import de.fraunhofer.aisec.cpg.graph.concepts.websockets.WebsocketOp

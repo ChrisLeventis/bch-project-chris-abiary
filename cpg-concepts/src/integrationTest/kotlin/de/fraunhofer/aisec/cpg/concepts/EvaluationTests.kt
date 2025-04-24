@@ -34,7 +34,7 @@ import de.fraunhofer.aisec.cpg.graph.concepts.SendingOperation
 import de.fraunhofer.aisec.cpg.graph.concepts.database.DatabasePass
 import de.fraunhofer.aisec.cpg.graph.concepts.fileown.FilePass
 import de.fraunhofer.aisec.cpg.graph.concepts.flaskinput.request.*
-import de.fraunhofer.aisec.cpg.graph.concepts.networkcomm.httpTmp.HttpPass
+import de.fraunhofer.aisec.cpg.graph.concepts.http.HttpPass
 import de.fraunhofer.aisec.cpg.graph.concepts.ownlogging.LoggingPass
 import de.fraunhofer.aisec.cpg.graph.concepts.websockets.WebsocketPass
 import de.fraunhofer.aisec.cpg.test.analyze
@@ -72,7 +72,11 @@ class EvaluationTest {
                 }
                 .count()
 
-        assertEquals(0, violationsFoundCount) // this mocks a real world analysis of an application, it evaluated to true only if no violations are found in an application
+        assertEquals(
+            0,
+            violationsFoundCount,
+        ) // this mocks a real world analysis of an application, it evaluated to true only if no
+        // violations are found in an application
     }
 
     @Test
